@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { saveAnalysisToHistory, getUserAnalysisHistory, getUserAnalysisStatistics } from '../services/historyService';
 import { protect } from '../middleware/auth';
-import { ApiResponse } from '@shared/types/api';
+import { ApiResponse, OutfitAnalysis } from '@shared/types/api';
+import { saveAnalysisToHistory, getUserAnalysisHistory, getUserAnalysisStatistics } from '../services/historyService';
 
 export const saveHistory = async (req: Request, res: Response, next: NextFunction) => {
     try {
