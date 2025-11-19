@@ -34,6 +34,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 app.use('/api/analyze', analysisRoutes);
 app.use('/api/trends', trendRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/history', historyRoutes);
 
 // 404 Handler
 app.use((req: Request, res: Response) => {
