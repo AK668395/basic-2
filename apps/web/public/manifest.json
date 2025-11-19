@@ -1,0 +1,24 @@
+{
+  "name": "StyleSage AI - Outfit Rating & Style Intelligence",
+  "short_name": "StyleSage AI",
+  "description": "Get AI-powered outfit ratings and style suggestions based on real-time fashion trends.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#c9302c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["lifestyle", "fashion", "productivity"],
+  "lang": "en"
+}
