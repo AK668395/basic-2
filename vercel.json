@@ -1,18 +1,31 @@
 {
-  "buildCommand": "cd apps/web && npm run build",
-  "outputDirectory": "apps/web/.next",
-  "installCommand": "npm install",
-  "framework": "nextjs",
-  "functions": {
-    "apps/api/src/index.ts": {
-      "runtime": "nodejs18.x"
+  "version": 2,
+  "name": "stylesage-ai",
+  "builds": [
+    {
+      "src": "apps/web/package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "apps/api/src/index.ts",
+      "use": "@vercel/node"
     }
-  },
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/apps/api/src/index.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/apps/web/$1"
+    }
+  ],
   "env": {
-    "NEXT_PUBLIC_API_URL": "@api-url",
-    "DATABASE_URL": "@database-url",
-    "REDIS_URL": "@redis-url",
-    "JWT_SECRET": "@jwt-secret",
-    "OPENAI_API_KEY": "@openai-key"
+    "NEXT_PUBLIC_API_URL": "@api_url",
+    "DATABASE_URL": "@database_url",
+    "REDIS_URL": "@redis_url",
+    "JWT_SECRET": "@jwt_secret",
+    "OPENAI_API_KEY": "@openai_api_key"
   }
 }
