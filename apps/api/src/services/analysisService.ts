@@ -1,64 +1,65 @@
-import { OutfitInput, OutfitAnalysis } from '@shared/types/outfit';
+import { OutfitInput, OutfitAnalysis, ClothingItem } from '@shared/types/outfit';
+import { callOpenAIVision } from './aiService';
+import * as scoring from './scoringService';
+import { getTrendData } from './trendService';
+import { generateSuggestions } from './suggestionService';
 
 interface AnalysisInput {
   text?: string;
   occasion?: string;
   image?: Buffer;
+  userId?: string; // To be used for personal style scoring
 }
 
 export const analyzeOutfit = async (input: AnalysisInput): Promise<OutfitAnalysis> => {
-  console.log('Analyzing outfit with input:', input);
+  console.log('Analyzing outfit with input:', { ...input, image: '...buffer...' });
 
-  // Placeholder for AI analysis logic
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  // 1. Get initial analysis from AI Vision
+  const visionAnalysis = await callOpenAIVision(input.text, input.image);
 
-  const mockAnalysis: OutfitAnalysis = {
-    id: 'mock-analysis-123',
-    userId: 'mock-user-456',
+  // 2. Fetch trend data
+  const trendData = await getTrendData(visionAnalysis.items);
+
+  // 3. Calculate scores for each dimension
+  const colorScore = scoring.calculateColorCoordination(visionAnalysis.items);
+  const styleScore = scoring.calculateStyleCompatibility(visionAnalysis.items, visionAnalysis.overallStyle);
+  const trendScore = scoring.calculateTrendAlignment(visionAnalysis.items, trendData);
+  const occasionScore = scoring.calculateOccasionFit(visionAnalysis.overallStyle, input.occasion);
+  // Personal style score will be a placeholder until user preferences are implemented
+  const personalStyleScore = scoring.calculatePersonalStyle(visionAnalysis.items, undefined);
+
+  const scores = {
+      colorCoordination: { ...colorScore, weight: 0.25 },
+      styleCompatibility: { ...styleScore, weight: 0.25 },
+      trendAlignment: { ...trendScore, weight: 0.20 },
+      occasionFit: { ...occasionScore, weight: 0.15 },
+      personalStyle: { ...personalStyleScore, weight: 0.15 },
+  };
+
+  // 4. Calculate overall score
+  const overallScore = scoring.calculateOverallScore(scores);
+
+  // 5. Generate suggestions
+  const suggestions = await generateSuggestions(visionAnalysis.items, { ...scores, overall: overallScore }, visionAnalysis.overallStyle);
+
+  const analysisResult: OutfitAnalysis = {
+    id: `analysis-${new Date().getTime()}`,
+    userId: input.userId || 'guest',
     input: {
       text: input.text,
       occasion: input.occasion,
     },
-    items: [
-      { id: 'item-1', type: 'jacket', color: ['blue'], material: 'denim', style: 'casual', confidence: 0.9 },
-      { id: 'item-2', type: 't-shirt', color: ['white'], material: 'cotton', style: 'casual', confidence: 0.95 },
-      { id: 'item-3', type: 'jeans', color: ['black'], material: 'denim', style: 'casual', confidence: 0.92 },
-    ],
-    overallStyle: 'streetwear',
+    items: visionAnalysis.items,
+    overallStyle: visionAnalysis.overallStyle,
     scores: {
-      overall: 8.2,
-      colorCoordination: { score: 8, weight: 0.25, explanation: 'Classic and versatile color combination.' },
-      styleCompatibility: { score: 8.5, weight: 0.25, explanation: 'All items fit well within a casual streetwear aesthetic.' },
-      trendAlignment: { score: 7.5, weight: 0.2, explanation: 'Denim jackets and slim jeans are timeless, but not currently high-fashion.' },
-      occasionFit: { score: 9, weight: 0.15, explanation: 'Excellent for a casual day out.' },
-      personalStyle: { score: 8, weight: 0.15, explanation: 'Matches a classic and comfortable style profile.' },
+        ...scores,
+        overall: overallScore,
     },
-    suggestions: [
-      {
-        id: 'sugg-1',
-        type: 'item_replacement',
-        priority: 'medium',
-        title: 'Elevate with Footwear',
-        description: 'Consider swapping the sneakers for a pair of leather boots to add a touch of sophistication.',
-        reasoning: 'Boots would elevate the overall look from casual to smart-casual, increasing versatility.',
-        impact: { scoreIncrease: 0.5, confidence: 0.8 },
-      },
-    ],
-    trends: {
-      overall: { score: 7, direction: 'stable', changePercent: 0, confidence: 0.8, sampleSize: 1000, timeframe: 'week' },
-      byPlatform: {
-        instagram: { score: 7.5, direction: 'up', changePercent: 5, confidence: 0.85, sampleSize: 400, timeframe: 'week' },
-        pinterest: { score: 7.2, direction: 'stable', changePercent: 0, confidence: 0.8, sampleSize: 300, timeframe: 'week' },
-        x: { score: 6.8, direction: 'down', changePercent: -2, confidence: 0.75, sampleSize: 200, timeframe: 'week' },
-        threads: { score: 7, direction: 'up', changePercent: 3, confidence: 0.8, sampleSize: 100, timeframe: 'week' },
-      },
-      trendingItems: [],
-      seasonalTrends: [],
-      demographics: { age: [], location: [], style: [] },
-    },
-    confidence: 0.91,
+    suggestions,
+    trends: trendData,
+    confidence: visionAnalysis.confidence, // This should probably be re-calculated based on all factors
     createdAt: new Date(),
   };
 
-  return mockAnalysis;
+  return analysisResult;
 };
