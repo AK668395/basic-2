@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 import analysisRoutes from './routes/analysis';
 import trendRoutes from './routes/trends';
 import userRoutes from './routes/user';
+import historyRoutes from './routes/history';
 
 app.get('/api/health', (req: Request, res: Response) => {
   const response: ApiResponse = {
