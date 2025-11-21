@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vibe Arcade — Mini Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-1: linear-gradient(135deg,#0f172a 0%,#12263a 50%, #0f172a 100%);
+      --neon-pink: #ff6bcb;
+      --neon-cyan: #3be7ff;
+      --glass: rgba(255,255,255,0.06);
+      --glass-2: rgba(255,255,255,0.03);
+      --accent: #ffec7a;
+      --muted: #cbd5e1;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Poppins',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg-1);color:#e6eef8}
+
+    .wrap{max-width:1100px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .dot{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--neon-pink),var(--neon-cyan));display:flex;align-items:center;justify-content:center;font-weight:900;color:#041124}
+    h1{font-size:20px;margin:0}
+    p.lead{color:var(--muted);margin:0;font-size:13px}
+
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:16px;padding:18px;box-shadow:0 6px 30px rgba(2,6,23,0.6);backdrop-filter:blur(6px)}
+
+    .controls{display:flex;gap:12px;margin:14px 0}
+    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:10px 14px;border-radius:12px;color:var(--muted);cursor:pointer;transition:all .18s;display:inline-flex;gap:8px;align-items:center}
+    .btn:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(59,231,255,0.06)}
+    .btn.active{background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(59,231,255,0.03));border:1px solid rgba(59,231,255,0.12);color:white}
+
+    .grid{display:grid;grid-template-columns:360px 1fr;gap:18px;margin-top:12px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr} .logo .dot{width:40px;height:40px}}
+
+    /* Left panel */
+    .sidebar{display:flex;flex-direction:column;gap:12px}
+    .thumb{height:220px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071225,#072a2f);position:relative;overflow:hidden}
+    .thumb .flair{position:absolute;right:-60px;top:-50px;transform:rotate(30deg);padding:10px 80px;background:linear-gradient(90deg,var(--neon-pink),var(--neon-cyan));opacity:0.12}
+    .mini-stats{display:flex;gap:8px;justify-content:space-between;color:var(--muted);font-size:13px}
+
+    /* Game area */
+    .game-area{height:500px;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+    .game-canvas{flex:1;background:linear-gradient(180deg,#071429 0%,#08122a 100%);display:flex;align-items:center;justify-content:center;position:relative}
+    .hud{position:absolute;left:12px;top:12px;display:flex;gap:10px}
+    .hud .badge{padding:8px 10px;border-radius:10px;background:var(--glass);font-weight:700;color:var(--muted);font-size:13px}
+
+    /* Game-specific */
+    .circle{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#041124;box-shadow:0 10px 30px rgba(0,0,0,0.4)}
+    .player{width:36px;height:36px;background:linear-gradient(180deg,var(--neon-cyan),#2ec9ff);position:absolute;border-radius:6px}
+    .obstacle{width:28px;height:28px;background:linear-gradient(180deg,var(--neon-pink),#ff93d3);position:absolute;border-radius:6px}
+
+    /* Trivia */
+    .quiz{padding:14px;display:flex;flex-direction:column;gap:10px}
+    .question{font-weight:700}
+    .choices{display:flex;flex-direction:column;gap:8px}
+    .choice{padding:10px;border-radius:10px;background:var(--glass-2);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .choice:hover{transform:translateY(-4px)}
+
+    footer{margin-top:12px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;align-items:center}
+
+    /* flashy */
+    .neon-text{background:linear-gradient(90deg,var(--neon-pink),var(--neon-cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+    /* small helpers */
+    .muted{color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="dot">VA</div>
+        <div>
+          <h1>Vibe Arcade <span class="muted">— mini-games to flex</span></h1>
+          <p class="lead">Gen‑Z vibe: quick, colorful, and snackable. Play a mode — beat your best.</p>
+        </div>
+      </div>
+      <div>
+        <button class="btn" id="shareBtn">Share</button>
+        <button class="btn" id="resetBtn">Reset</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="sidebar">
+        <div class="card thumb">
+          <div class="flair">V I B E</div>
+          <div style="text-align:center;z-index:2">
+            <h2 class="neon-text" style="margin:0;font-size:26px">Pick a Mode</h2>
+            <p class="muted">Tap • Dodge • Quiz</p>
+          </div>
+        </div>
+
+        <div class="card mini-stats">
+          <div>Best combo <strong id="bestCombo">0</strong></div>
+          <div>Top score <strong id="topScore">0</strong></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn active" data-mode="tap">Tap Circles</button>
+            <button class="btn" data-mode="dodge">Dodge</button>
+            <button class="btn" data-mode="quiz">Trivia Quiz</button>
+          </div>
+          <div style="margin-top:10px;color:var(--muted);font-size:13px">Tip: Press <strong>R</strong> to restart a game, arrow keys to move in Dodge mode.</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 8px 0">Customize Quiz</h3>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <textarea id="quizRaw" rows="6" style="width:100%;border-radius:8px;padding:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);" placeholder='Format: question|option1,option2,option3,option4|index-of-correct (0-based)\nExample:\nWhat college do I attend?|ABC College,XYZ University,No idea,Prefer not to say|0'></textarea>
+            <button class="btn" id="loadQuiz">Load Questions</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-area card">
+        <div class="game-canvas" id="gameCanvas">
+          <div class="hud">
+            <div class="badge" id="scoreBadge">Score: 0</div>
+            <div class="badge" id="timeBadge">Time: 0s</div>
+          </div>
+
+          <!-- Tap circles container -->
+          <div id="tapArea" style="position:relative;width:100%;height:100%;display:grid;place-items:center"></div>
+
+          <!-- Dodge area overlays -->
+          <div id="dodgeArea" style="position:absolute;inset:0;display:none"></div>
+
+          <!-- Quiz area -->
+          <div id="quizArea" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:20px">
+            <div class="quiz card" style="max-width:720px;">
+              <div class="question" id="quizQ">No questions loaded — add some on the left and hit "Load Questions".</div>
+              <div class="choices" id="quizChoices"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                <div class="muted">Question <span id="qIndex">0</span> / <span id="qTotal">0</span></div>
+                <div>
+                  <button class="btn" id="nextQ">Next</button>
+                  <button class="btn" id="restartQuiz">Restart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <footer>
+          <div class="muted">Controls: Click/tap to interact • Mobile-friendly</div>
+          <div class="muted">Made with ✨ — edit the code to personalise.</div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- utility
+    const $ = (s,root=document)=>root.querySelector(s);
+    const $$ = (s,root=document)=>[...root.querySelectorAll(s)];
+
+    // state
+    let mode = 'tap';
+    let score = 0;
+    let timer = 0; let timerInterval = null;
+    let bestCombo = 0; let combo = 0;
+    let topScore = 0;
+
+    // elements
+    const modeBtns = $$('button[data-mode]');
+    const tapArea = $('#tapArea');
+    const dodgeArea = $('#dodgeArea');
+    const quizArea = $('#quizArea');
+    const scoreBadge = $('#scoreBadge');
+    const timeBadge = $('#timeBadge');
+    const bestComboEl = $('#bestCombo');
+    const topScoreEl = $('#topScore');
+
+    // mode switch
+    modeBtns.forEach(b=>b.addEventListener('click',e=>{
+      modeBtns.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      switchMode(b.dataset.mode);
+    }));
+
+    function switchMode(m){
+      mode = m; resetAll();
+      tapArea.style.display = (m==='tap')? 'block' : 'none';
+      dodgeArea.style.display = (m==='dodge')? 'block' : 'none';
+      quizArea.style.display = (m==='quiz')? 'flex' : 'none';
+      if(m==='tap') startTap();
+      if(m==='dodge') startDodge();
+      if(m==='quiz') startQuiz();
+    }
+
+    // --- shared controls
+    $('#resetBtn').addEventListener('click',()=>{ resetAll(); startTap(); });
+    $('#shareBtn').addEventListener('click',()=>{ navigator.clipboard?.writeText(location.href).then(()=>alert('Link copied!')) });
+    document.addEventListener('keydown',e=>{ if(e.key.toLowerCase()==='r') resetAll(); if(e.key==='ArrowLeft'||e.key==='ArrowRight'||e.key==='ArrowUp'||e.key==='ArrowDown') { if(mode==='dodge') dodgeKey(e.key); } });
+
+    function resetAll(){
+      // clear intervals and DOM
+      clearInterval(timerInterval); timerInterval = null; timer = 0; timeBadge.textContent = 'Time: 0s';
+      score = 0; combo = 0; scoreBadge.textContent = 'Score: 0';
+      tapArea.innerHTML = '';
+      dodgeArea.innerHTML = '';
+      $('#quizChoices').innerHTML = '';
+      $('#quizQ').textContent = 'No questions loaded — add some on the left and hit "Load Questions".';
+      $('#qIndex').textContent = '0'; $('#qTotal').textContent = '0';
+    }
+
+    function startTimer(){ if(timerInterval) return; timerInterval = setInterval(()=>{ timer++; timeBadge.textContent = 'Time: '+timer+'s'; },1000); }
+
+    // ---------------- TAP GAME ----------------
+    let tapSpawnTimer = null;
+    function startTap(){ startTimer(); spawnTapCircle(); tapSpawnTimer = setInterval(spawnTapCircle,900); }
+
+    function spawnTapCircle(){
+      const C = document.createElement('div');
+      C.className='circle card';
+      // random color
+      const gradient = Math.random()>0.5? `linear-gradient(180deg,${getRandColor()},${getRandColor(1)})` : `linear-gradient(180deg,${getRandColor(1)},${getRandColor()})`;
+      C.style.background = gradient;
+      // random position inside tapArea
+      const rect = tapArea.getBoundingClientRect();
+      const size = 64; const x = Math.random()*(rect.width-size); const y = Math.random()*(rect.height-size);
+      C.style.position='absolute'; C.style.left = x+'px'; C.style.top = y+'px';
+      C.textContent = Math.floor(Math.random()*50)+1;
+      tapArea.appendChild(C);
+
+      // disappear timer
+      const life = 1200 + Math.random()*1200; // ms
+      const t = setTimeout(()=>{ if(C.parentNode){ C.remove(); combo=0 } },life);
+
+      C.addEventListener('click',()=>{
+        clearTimeout(t);
+        const val = parseInt(C.textContent)||1;
+        score += val; combo++; bestCombo = Math.max(bestCombo,combo); topScore = Math.max(score, topScore);
+        updateStats();
+        // effect
+        C.style.transform='scale(1.08)'; C.style.opacity='0.9';
+        setTimeout(()=>{ C.remove(); },120);
+      });
+    }
+
+    function getRandColor(alt){
+      const a = alt? ['#3be7ff','#2ec9ff','#60f5e2'] : ['#ff6bcb','#ff93d3','#ffb3e6'];
+      return a[Math.floor(Math.random()*a.length)];
+    }
+
+    function updateStats(){ scoreBadge.textContent = 'Score: '+score; bestComboEl.textContent = bestCombo; topScoreEl.textContent = topScore; }
+
+    // ---------------- DODGE GAME ----------------
+    let dodgeLoop = null; let obstacles = []; let player = null; let dodgeState = {x:100,y:100,w:36,h:36,speed:6};
+
+    function startDodge(){ startTimer(); // create player
+      dodgeArea.innerHTML=''; obstacles = [];
+      player = document.createElement('div'); player.className='player'; player.style.left='50px'; player.style.top='50px'; dodgeArea.appendChild(player);
+      // make the playfield relative
+      dodgeArea.style.position='absolute';
+      dodgeLoop = setInterval(dodgeTick,20);
+      // spawn obstacles
+      setInterval(()=>{ spawnObstacle(); },900);
+    }
+
+    function dodgeTick(){
+      // move obstacles
+      obstacles.forEach(o=>{
+        o.el.style.left = (o.x -= o.vx)+'px';
+        o.el.style.top = (o.y += o.vy)+'px';
+        // remove if off-screen
+        const rect = dodgeArea.getBoundingClientRect();
+        if(o.x < -80 || o.y > rect.height+80){ o.el.remove(); obstacles = obstacles.filter(x=>x!==o); }
+        // collision
+        const pRect = player.getBoundingClientRect(); const oRect = o.el.getBoundingClientRect();
+        if(rectsOverlap(pRect,oRect)){
+          // hit!
+          combo=0; score = Math.max(0, score-10); updateStats();
+          o.el.remove(); obstacles = obstacles.filter(x=>x!==o);
+        }
+      });
+    }
+
+    function spawnObstacle(){
+      const rect = dodgeArea.getBoundingClientRect();
+      if(!rect.width) return;
+      const el = document.createElement('div'); el.className='obstacle';
+      const startX = rect.width + 40; const startY = Math.random()*(rect.height-40);
+      el.style.left = startX+'px'; el.style.top = startY+'px';
+      dodgeArea.appendChild(el);
+      const o = {el,x:startX,y:startY,vx:2+Math.random()*3,vy:0.8+Math.random()*1.8}; obstacles.push(o);
+    }
+
+    function rectsOverlap(a,b){ return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom); }
+
+    function dodgeKey(key){
+      const step = dodgeState.speed; const rect = dodgeArea.getBoundingClientRect();
+      let px = parseFloat(player.style.left||0); let py = parseFloat(player.style.top||0);
+      if(key==='ArrowLeft') px = Math.max(0,px-step);
+      if(key==='ArrowRight') px = Math.min(rect.width - dodgeState.w, px+step);
+      if(key==='ArrowUp') py = Math.max(0,py-step);
+      if(key==='ArrowDown') py = Math.min(rect.height - dodgeState.h, py+step);
+      player.style.left = px+'px'; player.style.top = py+'px';
+      // reward for moving
+      score += 1; combo++; bestCombo = Math.max(bestCombo,combo); updateStats();
+    }
+
+    // touch controls for dodge
+    let touchStart=null;
+    dodgeArea.addEventListener('touchstart',e=>{ touchStart = e.touches[0]; });
+    dodgeArea.addEventListener('touchmove',e=>{ if(!touchStart) return; const t = e.touches[0]; const dx = t.clientX - touchStart.clientX; const dy = t.clientY - touchStart.clientY; let px = parseFloat(player.style.left||0); let py = parseFloat(player.style.top||0); px += dx*0.04; py += dy*0.04; const rect = dodgeArea.getBoundingClientRect(); px = Math.max(0,Math.min(rect.width - dodgeState.w, px)); py = Math.max(0,Math.min(rect.height - dodgeState.h, py)); player.style.left = px+'px'; player.style.top = py+'px'; touchStart = t; score++; updateStats(); });
+
+    // ---------------- QUIZ ----------------
+    let questions = [];
+    let qIndex = 0; let quizScore = 0;
+
+    $('#loadQuiz').addEventListener('click',()=>{
+      const raw = $('#quizRaw').value.trim();
+      questions = [];
+      raw.split('\n').forEach(line=>{
+        const parts = line.split('|').map(s=>s.trim());
+        if(parts.length>=3){
+          const opts = parts[1].split(',').map(s=>s.trim());
+          const correct = parseInt(parts[2])||0;
+          questions.push({q:parts[0],opts,correct});
+        }
+      });
+      if(questions.length) startQuiz(); else alert('No valid questions found. Use the sample format in the placeholder.');
+    });
+
+    function startQuiz(){ resetAll(); // keep questions
+      $('#quizArea').style.display='flex'; $('#tapArea').style.display='none'; $('#dodgeArea').style.display='none';
+      qIndex = 0; quizScore=0; renderQuestion();
+    }
+
+    function renderQuestion(){
+      if(!questions.length) return;
+      const Q = questions[qIndex]; $('#quizQ').textContent = Q.q; $('#qIndex').textContent = qIndex+1; $('#qTotal').textContent = questions.length;
+      const ch = $('#quizChoices'); ch.innerHTML=''; Q.opts.forEach((o,i)=>{
+        const d = document.createElement('div'); d.className='choice'; d.textContent = o; d.addEventListener('click',()=>{ if(i===Q.correct){ d.style.border='2px solid lime'; quizScore+=10; } else { d.style.border='2px solid rgba(255,80,80,0.9)'; }
+          // show score floating
+          setTimeout(()=>{ qIndex = Math.min(questions.length-1,qIndex+1); if(qIndex<questions.length) renderQuestion(); else finishQuiz(); },700);
+        }); ch.appendChild(d);
+      });
+    }
+
+    $('#nextQ').addEventListener('click',()=>{ qIndex = Math.min(questions.length-1,qIndex+1); renderQuestion(); });
+    $('#restartQuiz').addEventListener('click',()=>{ qIndex=0; quizScore=0; renderQuestion(); });
+
+    function finishQuiz(){ $('#quizQ').textContent = 'Quiz finished! Score: '+quizScore; $('#quizChoices').innerHTML=''; }
+
+    // initial
+    switchMode('tap');
+
+    // Save top scores locally
+    window.addEventListener('beforeunload',()=>{ localStorage.setItem('vibe_topScore', topScore); localStorage.setItem('vibe_bestCombo', bestCombo); });
+    // load
+    (function(){ const s = parseInt(localStorage.getItem('vibe_topScore'))||0; const b = parseInt(localStorage.getItem('vibe_bestCombo'))||0; topScore = s; bestCombo = b; topScoreEl.textContent = topScore; bestComboEl.textContent = bestCombo; })();
+
+  </script>
+</body>
+</html>

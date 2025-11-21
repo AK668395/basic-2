@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hype Kicks: Bollywood & Hip-Hop Sneaker Culture</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for Gen-Z Aesthetic and Animations */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        :root {
+            --primary: #4f46e5; /* Indigo 600 */
+            --accent: #f43f5e; /* Rose 500 - for that vibrant pop */
+            --bg-dark: #111827; /* Dark Gray 900 */
+            --text-light: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* Card Hover Effect (Subtle Tilt & Shadow) */
+        .sneaker-card {
+            transition: all 0.3s ease-out;
+            transform-style: preserve-3d;
+            will-change: transform, box-shadow;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            perspective: 1000px;
+        }
+
+        .sneaker-card:hover {
+            transform: translateY(-5px) rotateX(1deg) rotateY(1deg);
+            box-shadow: 0 20px 40px rgba(var(--accent-rgb, 244, 63, 94), 0.5);
+            border-color: var(--accent);
+        }
+
+        /* Gradient Text for the 'HYPE' aesthetic */
+        .hype-gradient {
+            background-image: linear-gradient(45deg, var(--accent) 30%, var(--primary) 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* Custom Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="min-h-screen p-4 sm:p-8">
+        
+        <!-- Hero Section -->
+        <header class="text-center py-16 sm:py-24 max-w-4xl mx-auto reveal" style="animation-delay: 0.1s;">
+            <h1 class="text-5xl sm:text-7xl font-black mb-4 tracking-tight">
+                THE <span class="hype-gradient">HYPE</span> KICKS INDEX
+            </h1>
+            <p class="text-xl sm:text-2xl font-light text-gray-300">
+                Dropping the hottest heat worn by Bollywood's A-list and Indian Hip-Hop's finest.
+            </p>
+            <div class="mt-8">
+                <a href="#bollywood-section" class="inline-block px-8 py-3 text-lg font-bold rounded-full bg-indigo-600 hover:bg-indigo-500 transition duration-300 transform hover:scale-105 shadow-xl">
+                    Check the Drop 🔥
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <section id="content" class="max-w-6xl mx-auto">
+            
+            <!-- Bollywood Section -->
+            <h2 id="bollywood-section" class="text-4xl font-extrabold mb-10 mt-20 border-b-4 border-rose-500 pb-3 reveal" style="animation-delay: 0.3s;">
+                Bollywood Icons: Luxury & Streetwear
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Card 1: Ranveer Singh -->
+                <div class="sneaker-card bg-gray-800 p-6 rounded-xl border border-gray-700 reveal" style="animation-delay: 0.4s;">
+                    <img src="https://placehold.co/400x300/f43f5e/ffffff?text=Ranveer+Singh's+Yeezy" alt="Ranveer Singh in Bold Sneakers" class="w-full h-48 object-cover rounded-lg mb-4 opacity-80" onerror="this.onerror=null;this.src='https://placehold.co/400x300/f43f5e/ffffff?text=RANVEER';" />
+                    <h3 class="text-2xl font-bold mb-2 hype-gradient">Ranveer Singh</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-2">The Style King</p>
+                    <p class="text-sm text-gray-400">
+                        Known for his eccentric and high-energy style, Ranveer is a true sneakerhead. His closet features the boldest drops, including rare **Adidas Yeezy** colorways, **Off-White x Nike Air Jordans**, and luxury chunky runners. He sets the bar for experimental footwear.
+                    </p>
+                    <span class="inline-block mt-3 px-3 py-1 text-xs font-semibold bg-rose-500 text-white rounded-full">#LimitedEdition #Hypebeast</span>
+                </div>
+
+                <!-- Card 2: Deepika Padukone -->
+                <div class="sneaker-card bg-gray-800 p-6 rounded-xl border border-gray-700 reveal" style="animation-delay: 0.5s;">
+                    <img src="https://placehold.co/400x300/4f46e5/ffffff?text=Deepika's+Designer+Kicks" alt="Deepika Padukone in Designer Sneakers" class="w-full h-48 object-cover rounded-lg mb-4 opacity-80" onerror="this.onerror=null;this.src='https://placehold.co/400x300/4f46e5/ffffff?text=DEEPIKA';" />
+                    <h3 class="text-2xl font-bold mb-2 text-indigo-400">Deepika Padukone</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-2">The Elegant Minimalist</p>
+                    <p class="text-sm text-gray-400">
+                        Deepika opts for sophisticated comfort. Her preference leans towards luxury neutral sneakers like those from **Balenciaga** or premium lines from **Adidas**. She masterfully blends designer elegance with casual athleisure looks.
+                    </p>
+                    <span class="inline-block mt-3 px-3 py-1 text-xs font-semibold bg-indigo-500 text-white rounded-full">#LuxuryStreet #CleanVibes</span>
+                </div>
+
+                <!-- Card 3: Shah Rukh Khan -->
+                <div class="sneaker-card bg-gray-800 p-6 rounded-xl border border-gray-700 reveal" style="animation-delay: 0.6s;">
+                    <img src="https://placehold.co/400x300/10b981/ffffff?text=SRK's+Golden+Goose" alt="Shah Rukh Khan in Golden Goose Sneakers" class="w-full h-48 object-cover rounded-lg mb-4 opacity-80" onerror="this.onerror=null;this.src='https://placehold.co/400x300/10b981/ffffff?text=SRK';" />
+                    <h3 class="text-2xl font-bold mb-2 text-green-400">Shah Rukh Khan (SRK)</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-2">The Timeless Icon</p>
+                    <p class="text-sm text-gray-400">
+                        The 'Badshah' of Bollywood favors high-end, classic European brands. He is frequently spotted in the pre-distressed style of **Golden Goose Superstar** kicks and the minimalist luxury of **Common Projects** sneakers.
+                    </p>
+                    <span class="inline-block mt-3 px-3 py-1 text-xs font-semibold bg-green-500 text-white rounded-full">#DistressedCool #ItalianCraft</span>
+                </div>
+            </div>
+
+            <!-- Rappers Section -->
+            <h2 id="rapper-section" class="text-4xl font-extrabold mb-10 mt-20 border-b-4 border-primary pb-3 reveal" style="animation-delay: 0.7s;">
+                Hip-Hop Royalty: Unmatched Collections
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Card 4: Badshah -->
+                <div class="sneaker-card bg-gray-800 p-6 rounded-xl border border-gray-700 reveal" style="animation-delay: 0.8s;">
+                    <img src="https://placehold.co/400x300/4f46e5/ffffff?text=Badshah's+22+Lakh+Yeezy" alt="Badshah in Expensive Sneakers" class="w-full h-48 object-cover rounded-lg mb-4 opacity-80" onerror="this.onerror=null;this.src='https://placehold.co/400x300/4f46e5/ffffff?text=BADSHAH';" />
+                    <h3 class="text-2xl font-bold mb-2 hype-gradient">Badshah</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-2">The 1000+ Collection</p>
+                    <p class="text-sm text-gray-400">
+                        Badshah is known to own over 1,000 pairs. The crown jewel? The ultra-rare **Nike Air Yeezy 2 (Red October)**, which he reportedly bought for 6 Lakhs and is now valued up to 22 Lakhs. He is the undisputed king of Indian sneaker culture.
+                    </p>
+                    <span class="inline-block mt-3 px-3 py-1 text-xs font-semibold bg-indigo-500 text-white rounded-full">#RedOctober #GrailStatus</span>
+                </div>
+
+                <!-- Card 5: Raftaar -->
+                <div class="sneaker-card bg-gray-800 p-6 rounded-xl border border-gray-700 reveal" style="animation-delay: 0.9s;">
+                    <img src="https://placehold.co/400x300/f43f5e/ffffff?text=Raftaar's+Hi-Tops" alt="Raftaar in Designer Hi-Tops" class="w-full h-48 object-cover rounded-lg mb-4 opacity-80" onerror="this.onerror=null;this.src='https://placehold.co/400x300/f43f5e/ffffff?text=RAFTAAR';" />
+                    <h3 class="text-2xl font-bold mb-2 text-rose-400">Raftaar</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-2">High-Fashion Hype</p>
+                    <p class="text-sm text-gray-400">
+                        Raftaar is the "God of Hypebeasts" among Indian rappers, often sporting luxury sneakers over classics. His notable pairs include the chunky **Versace Chain Reactions**, **Dolce & Gabbana Super Kings**, and **Louis Vuitton LV Trainer Hi-Tops** (designed by Virgil Abloh).
+                    </p>
+                    <span class="inline-block mt-3 px-3 py-1 text-xs font-semibold bg-rose-500 text-white rounded-full">#VirgilAbloh #ChunkySolidity</span>
+                </div>
+
+                <!-- Card 6: MC Stan -->
+                <div class="sneaker-card bg-gray-800 p-6 rounded-xl border border-gray-700 reveal" style="animation-delay: 1.0s;">
+                    <img src="https://placehold.co/400x300/10b981/ffffff?text=MC+Stan's+Streetwear" alt="MC Stan in Streetwear Kicks" class="w-full h-48 object-cover rounded-lg mb-4 opacity-80" onerror="this.onerror=null;this.src='https://placehold.co/400x300/10b981/ffffff?text=MC+STAN';" />
+                    <h3 class="text-2xl font-bold mb-2 text-green-400">MC Stan</h3>
+                    <p class="text-lg font-medium text-gray-300 mb-2">The Trend Setter</p>
+                    <p class="text-sm text-gray-400">
+                        A major force in new-age Indian Hip-Hop, MC Stan embodies modern street fashion. He integrates iconic American streetwear silhouettes, often seen wearing high-top and bulky styles, showcasing collaborations and limited edition drops like the **Nike Air Force 1**.
+                    </p>
+                    <span class="inline-block mt-3 px-3 py-1 text-xs font-semibold bg-green-500 text-white rounded-full">#StreetAesthetic #NewWave</span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Footer / CTA Section -->
+        <footer class="text-center py-16 mt-20 border-t border-gray-700 reveal" style="animation-delay: 1.2s;">
+            <p class="text-xl font-semibold mb-4 hype-gradient">Stay Updated on the Latest Drops.</p>
+            <p class="text-sm text-gray-500">
+                This webpage utilizes an elegant, Gen-Z inspired design with Tailwind CSS and custom animations.
+            </p>
+        </footer>
+
+    </main>
+    
+    <script>
+        // Simple Intersection Observer for 'reveal' animations on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Set the animation delay based on the inline style
+                    const delay = parseFloat(entry.target.style.animationDelay || '0s') * 1000;
+                    setTimeout(() => {
+                        entry.target.classList.add('animate-in');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        });
+
+        document.querySelectorAll('.reveal').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Simple Mousemove/Tilt Effect on Cards (for Gen-Z visual flair)
+        const cards = document.querySelectorAll('.sneaker-card');
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -5; // Max 5 degrees
+                const rotateY = ((x - centerX) / centerX) * 5;  // Max 5 degrees
+                
+                card.style.transform = `perspective(1000px) translateY(-5px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) translateY(0) rotateX(0deg) rotateY(0deg)';
+            });
+        });
+
+    </script>
+</body>
+</html>
