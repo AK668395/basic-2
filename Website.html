@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CelebSneaks | Celebrity Sneaker Guide</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --text: #ffffff;
+      --accent: #ff2e63;
+      --light-bg: #f8f9fa;
+      --light-card: #ffffff;
+      --light-text: #212529;
+    }
+    [data-theme="light"] {
+      --bg: #f8f9fa;
+      --card: #ffffff;
+      --text: #212529;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.4s ease;
+    }
+    header {
+      text-align: center;
+      padding: 4rem 1rem 2rem;
+      background: linear-gradient(135deg, #ff2e63, #08f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 3.5rem;
+      font-weight: 900;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 1.3rem;
+      margin: -1rem 0 3rem;
+      opacity: 0.8;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--card);
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 20px 40px rgba(255,46,99,0.3);
+    }
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+    .info {
+      padding: 1.5rem;
+    }
+    .name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .sneaker {
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin: 0.5rem 0;
+    }
+    .brand {
+      font-size: 1.1rem;
+      opacity: 0.7;
+    }
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      margin-top: 4rem;
+      opacity: 0.6;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 600px) {
+      header { font-size: 2.5rem; }
+      .container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <header>CelebSneaks</header>
+  <p class="subtitle">What sneakers do your favorite stars actually wear?</p>
+
+  <div class="container" id="cardsContainer">
+    <!-- Cards will be injected by JavaScript -->
+  </div>
+
+  <footer>© 2025 CelebSneaks • Made with ❤️ and a lot of sneaker obsession</footer>
+
+  <script>
+    const celebrities = [
+      { name: "Travis Scott", sneaker: "Air Jordan 1 Retro High OG", brand: "Nike x Travis Scott", img: "https://images.stockx.com/images/Air-Jordan-1-Retro-High-Travis-Scott.jpg?fit=fill&bg=FFFFFF&w=700&h=500" },
+      { name: "Kendrick Lamar", sneaker: "Cortez 'Kenny IV'", brand: "Nike", img: "https://images.stockx.com/images/Nike-Cortez-Kendrick-Lamar-House-Shoes.jpg?fit=fill&bg=FFFFFF&w=700&h=500" },
+      { name: "Billie Eilish", sneaker: "Air Force 1 High 'Mushroom'", brand: "Nike x Billie Eilish", img: "https://images.stockx.com/images/Nike-Air-Force-1-High-Billie-Eilish-Mushroom.jpg?fit=fill&bg=FFFFFF&w=700&h=500" },
+      { name: "Kanye West", sneaker: "Yeezy Boost 350 V2", brand: "adidas YEEZY", img: "https://images.stockx.com/images/adidas-Yeezy-Boost-350-V2-Onyx.jpg?fit=fill&bg=FFFFFF&w=700&h=500" },
+      { name: "Rihanna", sneaker: "Puma Creeper Phatty", brand: "Fenty x Puma", img: "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_2000,h_2000/global/396403/03/svz" },
+      { name: "Drake", sneaker: "NOCTA Hot Step Air Terra", brand: "Nike NOCTA", img: "https://images.stockx.com/images/Nike-Hot-Step-Air-Terra-Nocta-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500" },
+      { name: "A$AP Rocky", sneaker: "Vans Slip-On (custom)", brand: "Vans x AWGE", img: "https://images.stockx.com/images/Vans-Slip-On-A-Veil-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500" },
+      { name: "Pharrell Williams", sneaker: "Humanrace Samba", brand: "adidas x Humanrace", img: "https://images.stockx.com/images/adidas-Samba-Humanrace-Green.jpg?fit=fill&bg=FFFFFF&w=700&h=500" },
+      { name: "Bad Bunny", sneaker: "Response CL", brand: "adidas x Bad Bunny", img: "https://images.stockx.com/images/adidas-Response-CL-Bad-Bunny-Paso-Fino.jpg?fit=fill&bg=FFFFFF&w=700&h=500" },
+      { name: "Virgil Abloh †", sneaker: "Off-White™ Air Jordan 5", brand: "Off-White™ x Nike", img: "https://images.stockx.com/images/Air-Jordan-5-Retro-Off-White-Black.jpg?fit=fill&bg=FFFFFF&w=700&h=500" }
+    ];
+
+    function createCard(celeb) {
+      return `
+        <div class="card">
+          <img src="${celeb.img}" alt="${celeb.name}" loading="lazy">
+          <div class="info">
+            <div class="name">${celeb.name}</div>
+            <div class="sneaker">${celeb.sneaker}</div>
+            <div class="brand">${celeb.brand}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    document.getElementById("cardsContainer").innerHTML = 
+      celebrities.map(celeb => createCard(celeb)).join("");
+
+    // Theme toggle
+    function toggleTheme() {
+      const body = document.body;
+      const current = body.getAttribute("data-theme");
+      const newTheme = current === "light" ? "dark" : "light";
+      body.setAttribute("data-theme", newTheme);
+      document.querySelector(".theme-toggle i").classList.toggle("fa-sun");
+      document.querySelector(".theme-toggle i").classList.toggle("fa-moon");
+    }
+  </script>
+</body>
+</html>
