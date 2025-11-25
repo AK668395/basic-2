@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETFLIX - Trailers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- For icons -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            color: #9d0404;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav ul li a:hover {
+            color: #ff0000;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #333;
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 5px;
+            width: 200px;
+        }
+
+        .search-bar button {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .user-profile {
+            width: 40px;
+            height: 40px;
+            background: #ff0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 70vh;
+            background: url('https://www.google.com/search?sca_esv=b3bdd2799adcbf4d&rlz=1C1YTUH_enIN1053IN1054&udm=2&fbs=AIIjpHxU7SXXniUZfeShr2fp4giZ1Y6MJ25_tmWITc7uy4KIeqDdErwP5rACeJAty2zADJgYJpo1blvMpITBRgbnARM6y8KwxzRsF24u6g33NutBQg5oTaOPEjih5eaMj6wzNwVlSxn-MNwbBdUA9B4sO8l0S9hJpD6Wt_OpCHxDRG0pi1fT-ENP3H1FmrIfGb1NxYkr-Y-XmNG8SFFkgv3Q-YKlpE93jg&q=sidharth+malhotra&sa=X&sqi=2&ved=2ahUKEwi238jWp4aRAxUf1zgGHbg1B-wQtKgLegQIJhAB&biw=1536&bih=742&dpr=1.25#vhid=htQAdCAwVWby9M&vssid=mosaic') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .play-btn {
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .play-btn:hover {
+            background: #cc0000;
+        }
+
+        /* Content Rows */
+        .row {
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .row h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .row-content {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding-bottom: 10px;
+        }
+
+        .card {
+            min-width: 200px;
+            height: 300px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+        }
+
+        .card .info {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .card .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover .play-icon {
+            opacity: 1;
+        }
+
+        /* Modal for Trailer */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            width: 80%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        footer {
+            background: #111;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 32px;
+            }
+            .hero-content p {
+                font-size: 16px;
+            }
+            .row-content {
+                gap: 5px;
+            }
+            .card {
+                min-width: 150px;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Hotstar Replica</div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">TV Shows</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">Sports</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+        <div class="user-profile">
+            <i class="fas fa-user"></i>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Watch Trailers Now</h1>
+            <p>Discover the latest movies and shows with exclusive trailers.</p>
+            <button class="play-btn" onclick="playTrailer('https://www.youtube.com/watch?v=x-sgnhYJGOA')">Play Trailer</button>
+        </div>
+    </section>
+
+    <div class="row">
+        <h2>Trending Trailers</h2>
+        <div class="row-content">
+            <div class="card" onclick="playTrailer('https://www.youtube.com/watch?v=fdWnfzsx-ks')">
+                <img src="https://via.placeholder.com/200x250/333/fff?text=Movie+1" alt="Movie 1">
+                <div class="info">Movie Title 1</div>
+                <i class="fas fa-play-circle play-icon"></i>
+            </div>
+            <div class="card" onclick="playTrailer('https://www.youtube.com/watch?v=yq2foTcljSw')">
+                <img src="https://via.placeholder.com/200x250/333/fff?text=Movie+2" alt="Movie 2">
+                <div class="info">Movie Title 2</div>
+                <i class="fas fa-play-circle play-icon"></i>
+            </div>
+            <!-- Add more cards as needed -->
+        </div>
+    </div>
+
+    <div class="row">
+        <h2>Popular Trailers</h2>
+        <div class="row-content">
+            <div class="card" onclick="playTrailer('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                <img src="https://via.placeholder.com/200x250/333/fff?text=Movie+3" alt="Movie 3">
+                <div class="info">Movie Title 3</div>
+                <i class="fas fa-play-circle play-icon"></i>
+            </div>
+            <!-- Add more cards -->
+        </div>
+    </div>
+
+    <div id="trailer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <iframe id="trailer-video" width="100%" height="400" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Hotstar Replica. All rights reserved. (This is a demo UI only.)</p>
+    </footer>
+
+    <script>
+        function playTrailer(url) {
+            document.getElementById('trailer-video').src = url;
+            document.getElementById('trailer-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('trailer-modal').style.display = 'none';
+            document.getElementById('trailer-video').src = '';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('trailer-modal')) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
